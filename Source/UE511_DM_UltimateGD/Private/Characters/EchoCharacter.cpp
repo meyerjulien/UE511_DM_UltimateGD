@@ -12,6 +12,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 
+// Character Movement include
+#include "GameFramework/CharacterMovementComponent.h"
+
 
 // Sets default values
 AEchoCharacter::AEchoCharacter()
@@ -23,6 +26,10 @@ AEchoCharacter::AEchoCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+
+	// Sets the Character Orientation when turning in a direction and its Rotation speed
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
 
 	// Spring Arm and Camera Components
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
@@ -74,8 +81,8 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	// Input Axis Mapping (OLD WAY)
 	//PlayerInputComponent->BindAxis(FName("MoveForward"), this, &AEchoCharacter::MoveForward);
 	//PlayerInputComponent->BindAxis(FName("MoveRight"), this, &AEchoCharacter::MoveRight);
-	PlayerInputComponent->BindAxis(FName("Turn"), this, &AEchoCharacter::Turn);
-	PlayerInputComponent->BindAxis(FName("LookUp"), this, &AEchoCharacter::LookUp);
+	//PlayerInputComponent->BindAxis(FName("Turn"), this, &AEchoCharacter::Turn);
+	//PlayerInputComponent->BindAxis(FName("LookUp"), this, &AEchoCharacter::LookUp);
 
 }
 
@@ -83,24 +90,26 @@ void AEchoCharacter::Move(const FInputActionValue& Value)
 {
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 
-	// Keyboard Input
-	const FVector Forward = GetActorForwardVector();
+	// Basic movement not taking into account camera rotation(ControlRotation)
+	// Manages all 4 directions (forward,backward,left,right) but cant go in the direction of the camera
+	// Not to be used with Controller Input after this block of code
+	/*const FVector Forward = GetActorForwardVector();
 	AddMovementInput(Forward, MovementVector.Y);
 	UE_LOG(LogTemp, Warning, TEXT("IA_Move Forward triggered"));
-
 	const FVector Right = GetActorRightVector();
 	AddMovementInput(Right, MovementVector.X);
-	UE_LOG(LogTemp, Warning, TEXT("IA_Move Right triggered"));
+	UE_LOG(LogTemp, Warning, TEXT("IA_Move Right triggered"));*/
 
-	// Controller Input for Directional Movement <- to be seen later but says to come back to the video to add it
-	// Video is 'UE5 C++ Enhanced Input - 5 - Directional Input to Move a Character'
-	//const FRotator Rotation = Controller->GetControlRotation();
-	//const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
+	// Controller Input for Directional Movement
+	// Find out which wat is forward
+	// Video is 'UE5 C++ Enhanced Input - 5 - Directional Input to Move a Character' at 20:00 mark on Youtube
+	const FRotator Rotation = Controller->GetControlRotation();
+	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 
-	//const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	//AddMovementInput(ForwardDirection, MovementVector.Y);
-	//const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	//AddMovementInput(RightDirection, MovementVector.X);
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	AddMovementInput(ForwardDirection, MovementVector.Y);
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	AddMovementInput(RightDirection, MovementVector.X);
 		
 }
 
@@ -117,16 +126,24 @@ void AEchoCharacter::MoveForward(float Value)
 {
 	if (Controller && (Value != 0.f))
 	{
-		FVector Forward = GetActorForwardVector();
-		AddMovementInput(Forward, Value);
+		// Find out which way is forward
+		const FRotator ControlRotation = GetControlRotation();
+		const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f);
+
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value);
 	}
 }
 void AEchoCharacter::MoveRight(float Value)
 {
 	if (Controller && (Value != 0.f))
 	{
-		FVector Right = GetActorRightVector();
-		AddMovementInput(Right, Value);
+		// Find out which way is right
+		const FRotator ControlRotation = GetControlRotation();
+		const FRotator YawRotation(0.f, ControlRotation.Yaw, 0.f);
+
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Direction, Value);
 	}
 }
 void AEchoCharacter::Turn(float Value)
