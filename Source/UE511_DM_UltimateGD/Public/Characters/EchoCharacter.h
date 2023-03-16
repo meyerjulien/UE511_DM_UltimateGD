@@ -10,10 +10,16 @@
 #include "EchoCharacter.generated.h"
 
 // Forward declarations
+// Camera
 class USpringArmComponent;
 class UCameraComponent;
+
+// Enhanced Input
 class UInputMappingContext;
 class UInputAction;
+
+// Hair
+class UGroomComponent;
 
 UCLASS()
 class UE511_DM_ULTIMATEGD_API AEchoCharacter : public ACharacter
@@ -59,4 +65,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 		UCameraComponent* ViewCamera;
+
+	UPROPERTY(VisibleAnywhere, Category = Hair)
+	UGroomComponent* Hair;
+
+	UPROPERTY(VisibleAnywhere, Category = Hair)
+	UGroomComponent* Eyebrows;
 };

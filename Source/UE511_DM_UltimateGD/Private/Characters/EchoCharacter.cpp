@@ -15,6 +15,9 @@
 // Character Movement include
 #include "GameFramework/CharacterMovementComponent.h"
 
+// Hair include
+#include "GroomComponent.h"
+
 
 // Sets default values
 AEchoCharacter::AEchoCharacter()
@@ -38,6 +41,15 @@ AEchoCharacter::AEchoCharacter()
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(SpringArm);
+
+	// Hair
+	Hair = CreateDefaultSubobject<UGroomComponent>(TEXT("Hair"));
+	Hair->SetupAttachment(GetMesh());
+	Hair->AttachmentName = FString("Head");
+
+	Eyebrows = CreateDefaultSubobject<UGroomComponent>(TEXT("Eyebrows"));
+	Eyebrows->SetupAttachment(GetMesh());
+	Eyebrows->AttachmentName = FString("Head");
 }
 
 // Called when the game starts or when spawned
