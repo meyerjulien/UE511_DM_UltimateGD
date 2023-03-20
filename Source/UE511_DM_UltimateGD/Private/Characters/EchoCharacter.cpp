@@ -96,6 +96,9 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	//PlayerInputComponent->BindAxis(FName("Turn"), this, &AEchoCharacter::Turn);
 	//PlayerInputComponent->BindAxis(FName("LookUp"), this, &AEchoCharacter::LookUp);
 
+	// Input Action Mapping (OLD WAY)
+	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
+
 }
 
 void AEchoCharacter::Move(const FInputActionValue& Value)
@@ -113,7 +116,7 @@ void AEchoCharacter::Move(const FInputActionValue& Value)
 	UE_LOG(LogTemp, Warning, TEXT("IA_Move Right triggered"));*/
 
 	// Controller Input for Directional Movement
-	// Find out which wat is forward
+	// Find out which way is forward allowing for the camera to be moved around while moving
 	// Video is 'UE5 C++ Enhanced Input - 5 - Directional Input to Move a Character' at 20:00 mark on Youtube
 	const FRotator Rotation = Controller->GetControlRotation();
 	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
