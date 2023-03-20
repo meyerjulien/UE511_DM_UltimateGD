@@ -21,13 +21,17 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaTime) override;
 
 	// Forward declaration
-	// Doesn't work if on top of all code after includes
+	// Doesn't work if on top of all code after includes as the "usual" way
 	UPROPERTY(BlueprintReadOnly)
 	class AEchoCharacter* EchoCharacter;
 
 	UPROPERTY(BlueprintReadOnly, Category = Movement)
 	class UCharacterMovementComponent* EchoCharacterMovement;
 
+	// Variables
 	UPROPERTY(BlueprintReadOnly, Category = Movement)
 	float GroundSpeed;
+
+	UPROPERTY(BlueprintReadOnly, Category = Movement)
+	bool IsFalling;
 };
