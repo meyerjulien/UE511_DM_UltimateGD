@@ -87,6 +87,7 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	{
 		EnhancedInputComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Look);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AEchoCharacter::Jump);
 	}
 
 
@@ -97,7 +98,7 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	//PlayerInputComponent->BindAxis(FName("LookUp"), this, &AEchoCharacter::LookUp);
 
 	// Input Action Mapping (OLD WAY)
-	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
+	//PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
 
 }
 
