@@ -3,6 +3,7 @@
 
 #include "Items/Item.h"
 #include "UE511_DM_UltimateGD/DebugMacros.h"
+#include "Components/SphereComponent.h"
 
 #define THIRTY 30
 
@@ -14,12 +15,17 @@ AItem::AItem()
 
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMeshComponent"));
 	RootComponent = ItemMesh;
+
+	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+	Sphere->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
 }
 
 float AItem::TransformedCos()
@@ -30,6 +36,15 @@ float AItem::TransformedCos()
 float AItem::TransformedSin()
 {
 	return Amplitude * FMath::Sin(RunningTime * TimeConstant);
+}
+
+void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	const FString OtherActorName = OtherActor->GetName();
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, OtherActorName);
+	}
 }
 
 // Called every frame
