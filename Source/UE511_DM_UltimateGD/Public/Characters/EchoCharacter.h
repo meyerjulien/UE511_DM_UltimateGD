@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "CharacterTypes.h"
 
 // This include is always at the bottom
 #include "EchoCharacter.generated.h"
@@ -23,6 +24,10 @@ class UGroomComponent;
 
 // Item
 class AItem;
+
+
+
+
 
 UCLASS()
 class UE511_DM_ULTIMATEGD_API AEchoCharacter : public ACharacter
@@ -69,6 +74,8 @@ protected:
 	void EKeyPressed();
 
 private:
+	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+
 	UPROPERTY(VisibleAnywhere)
 		USpringArmComponent* SpringArm;
 
@@ -86,4 +93,5 @@ private:
 
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
+	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
 };
