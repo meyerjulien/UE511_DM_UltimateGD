@@ -4,6 +4,7 @@
 #include "Items/Item.h"
 #include "UE511_DM_UltimateGD/DebugMacros.h"
 #include "Components/SphereComponent.h"
+#include "Characters/EchoCharacter.h"
 
 #define THIRTY 30
 
@@ -13,9 +14,11 @@ AItem::AItem()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Adding a Static Mesh
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMeshComponent"));
 	RootComponent = ItemMesh;
 
+	// Adding a Sphere Overlap
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(GetRootComponent());
 }
@@ -25,7 +28,9 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Sphere Overlap behaviors
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
+	Sphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnSphereEndOverlap);
 }
 
 float AItem::TransformedCos()
@@ -40,10 +45,19 @@ float AItem::TransformedSin()
 
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	const FString OtherActorName = OtherActor->GetName();
-	if (GEngine)
+	AEchoCharacter* EchoCharacter = Cast<AEchoCharacter>(OtherActor);
+	if (EchoCharacter)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, OtherActorName);
+		EchoCharacter->SetOverlappingItem(this);
+	}
+}
+
+void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	AEchoCharacter* EchoCharacter = Cast<AEchoCharacter>(OtherActor);
+	if (EchoCharacter)
+	{
+		EchoCharacter->SetOverlappingItem(nullptr);
 	}
 }
 
@@ -61,6 +75,7 @@ void AItem::Tick(float DeltaTime)
 	//AddActorWorldOffset(FVector(MovementRate * DeltaTime, 0.f, 0.f));
 	//AddActorWorldRotation(FRotator(0.f, RotationRate * DeltaTime, 0.f));
 
+	// Keeping track or Running Time
 	RunningTime += DeltaTime;
 
 	//float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant);
@@ -72,7 +87,8 @@ void AItem::Tick(float DeltaTime)
 	//FVector AvgVector = Avg<FVector>(GetActorLocation(), FVector::ZeroVector);
 	//DRAW_POINT_SingleFrame(AvgVector);
 
-	AddActorWorldRotation(FRotator(0.f, 0.f, TransformedCos()));
+	//AddActorWorldRotation(FRotator(0.f, 0.f, TransformedCos()));
+	//AddActorWorldRotation(FRotator(0.f, 2.f, 0.f));
 	
 }
 

@@ -18,6 +18,10 @@
 // Hair include
 #include "GroomComponent.h"
 
+// Item include
+#include "Items/Item.h"
+#include "Items/Weapons/Wakizashi.h"
+
 
 // Sets default values
 AEchoCharacter::AEchoCharacter()
@@ -99,6 +103,7 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	// Input Action Mapping (OLD WAY)
 	//PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AEchoCharacter::EKeyPressed);
 
 }
 
@@ -107,8 +112,10 @@ void AEchoCharacter::Move(const FInputActionValue& Value)
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 
 	// Basic movement not taking into account camera rotation(ControlRotation)
-	// Manages all 4 directions (forward,backward,left,right) but cant go in the direction of the camera
+	// Manages all 4 directions (forward,backward,left,right) but can't go in the direction of the camera
 	// Not to be used with Controller Input after this block of code
+	// I'm keeping this just to remember this can work even though it's limited
+
 	/*const FVector Forward = GetActorForwardVector();
 	AddMovementInput(Forward, MovementVector.Y);
 	UE_LOG(LogTemp, Warning, TEXT("IA_Move Forward triggered"));
@@ -119,6 +126,7 @@ void AEchoCharacter::Move(const FInputActionValue& Value)
 	// Controller Input for Directional Movement
 	// Find out which way is forward allowing for the camera to be moved around while moving
 	// Video is 'UE5 C++ Enhanced Input - 5 - Directional Input to Move a Character' at 20:00 mark on Youtube
+
 	const FRotator Rotation = Controller->GetControlRotation();
 	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 
@@ -169,4 +177,14 @@ void AEchoCharacter::Turn(float Value)
 void AEchoCharacter::LookUp(float Value)
 {
 	AddControllerPitchInput(Value);
+}
+
+// Input Action Mapping (OLD WAY) functions
+void AEchoCharacter::EKeyPressed()
+{
+	AWakizashi* OverlappingWeapon = Cast<AWakizashi>(OverlappingItem);
+	if (OverlappingWeapon)
+	{
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+	}
 }

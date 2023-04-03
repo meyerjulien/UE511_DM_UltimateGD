@@ -21,6 +21,9 @@ class UInputAction;
 // Hair
 class UGroomComponent;
 
+// Item
+class AItem;
+
 UCLASS()
 class UE511_DM_ULTIMATEGD_API AEchoCharacter : public ACharacter
 {
@@ -62,6 +65,9 @@ protected:
 	void Turn(float Value);
 	void LookUp(float Value);
 
+	// Input Action Mapping (OLD WAY) - Actions
+	void EKeyPressed();
+
 private:
 	UPROPERTY(VisibleAnywhere)
 		USpringArmComponent* SpringArm;
@@ -74,4 +80,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = Hair)
 	UGroomComponent* Eyebrows;
+
+	UPROPERTY(VisibleInstanceOnly)
+	AItem* OverlappingItem;
+
+public:
+	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 };
