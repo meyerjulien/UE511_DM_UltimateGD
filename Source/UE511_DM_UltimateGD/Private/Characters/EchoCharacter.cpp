@@ -12,15 +12,18 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 
-// Character Movement include
+// Character Movement includes
 #include "GameFramework/CharacterMovementComponent.h"
 
-// Hair include
+// Hair includes
 #include "GroomComponent.h"
 
-// Item include
+// Item includes
 #include "Items/Item.h"
 #include "Items/Weapons/Wakizashi.h"
+
+// Animation Montage includes
+#include "Animation/AnimMontage.h"
 
 
 // Sets default values
@@ -104,6 +107,7 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	// Input Action Mapping (OLD WAY)
 	//PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AEchoCharacter::EKeyPressed);
+	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &AEchoCharacter::Attack);
 
 }
 
@@ -188,4 +192,51 @@ void AEchoCharacter::EKeyPressed()
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
 		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
 	}
+}
+
+void AEchoCharacter::Attack()
+{
+	if (CanAttack())
+	{
+		PlayAttackMontage();
+		ActionState = EActionState::EAS_Attacking;
+	}
+}
+
+// Montage related functions
+void AEchoCharacter::PlayAttackMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && AttackMontage)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		// Coin flip between 0 and 1 randomly with the FMath RandRange function.
+		const int32 Selection = FMath::RandRange(0, 1);
+		FName SectionName = FName();
+
+		// Depending on the coin flip result case 0 or 1 will be fired.
+		switch (Selection)
+		{
+		case 0:
+			SectionName = FName("Attack1");
+			break;
+		case 1:
+			SectionName = FName("Attack2");
+			break;
+		default:
+			break;
+		}
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
+}
+
+void AEchoCharacter::AttackEnd()
+{
+	ActionState = EActionState::EAS_Unoccupied;
+}
+
+bool AEchoCharacter::CanAttack()
+{
+	return ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState != ECharacterState::ECS_Unequipped;
 }

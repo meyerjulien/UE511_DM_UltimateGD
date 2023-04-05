@@ -9,8 +9,6 @@
 // Generated includes always at the bottom
 #include "EchoAnimInstance.generated.h"
 
-
-
 /**
  * 
  */
