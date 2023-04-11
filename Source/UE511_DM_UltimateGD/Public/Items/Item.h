@@ -9,6 +9,13 @@
 // Forward declaration
 class USphereComponent;
 
+// Enum
+enum class EItemState : uint8
+{
+	EIS_Hovering,
+	EIS_Equipped
+};
+
 UCLASS()
 class UE511_DM_ULTIMATEGD_API AItem : public AActor
 {
@@ -48,6 +55,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* ItemMesh;
+
+
+	EItemState ItemState = EItemState::EIS_Hovering;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

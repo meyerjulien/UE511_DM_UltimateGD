@@ -24,10 +24,10 @@ class UGroomComponent;
 
 // Item
 class AItem;
+class AWakizashi;
 
 // Attack
 class UAnimMontage;
-
 
 
 UCLASS()
@@ -82,6 +82,10 @@ protected:
 	void AttackEnd();
 	bool CanAttack();
 
+	void PlayWithdrawMontage(FName SectionName);
+	bool CanSheathe();
+	bool CanWithdraw();
+
 private:
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
@@ -106,6 +110,12 @@ private:
 	// Animation Montages
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* SwordWithdrawMontage;
+
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	AWakizashi* EquippedWeapon;
 
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }

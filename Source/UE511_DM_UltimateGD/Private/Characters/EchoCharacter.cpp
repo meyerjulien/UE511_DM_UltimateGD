@@ -119,7 +119,6 @@ void AEchoCharacter::Move(const FInputActionValue& Value)
 	// Manages all 4 directions (forward,backward,left,right) but can't go in the direction of the camera
 	// Not to be used with Controller Input after this block of code
 	// I'm keeping this just to remember this can work even though it's limited
-
 	/*const FVector Forward = GetActorForwardVector();
 	AddMovementInput(Forward, MovementVector.Y);
 	UE_LOG(LogTemp, Warning, TEXT("IA_Move Forward triggered"));
@@ -130,7 +129,8 @@ void AEchoCharacter::Move(const FInputActionValue& Value)
 	// Controller Input for Directional Movement
 	// Find out which way is forward allowing for the camera to be moved around while moving
 	// Video is 'UE5 C++ Enhanced Input - 5 - Directional Input to Move a Character' at 20:00 mark on Youtube
-
+	// The if check is used to stop the character from moving when attacking
+	if (ActionState == EActionState::EAS_Attacking) return; 
 	const FRotator Rotation = Controller->GetControlRotation();
 	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 
@@ -152,6 +152,7 @@ void AEchoCharacter::Look(const FInputActionValue& Value)
 // Input Axis Mapping (OLD WAY) functions
 void AEchoCharacter::MoveForward(float Value)
 {
+	if (ActionState == EActionState::EAS_Attacking) return;
 	if (Controller && (Value != 0.f))
 	{
 		// Find out which way is forward
@@ -164,6 +165,7 @@ void AEchoCharacter::MoveForward(float Value)
 }
 void AEchoCharacter::MoveRight(float Value)
 {
+	if (ActionState == EActionState::EAS_Attacking) return; 
 	if (Controller && (Value != 0.f))
 	{
 		// Find out which way is right
@@ -191,6 +193,22 @@ void AEchoCharacter::EKeyPressed()
 	{
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
 		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+		EquippedWeapon = OverlappingWeapon;
+	}
+	else
+	{
+		if (CanSheathe())
+		{
+			// Be careful with namings since PlayWithdrawMontage has BOTH withdraw and sheath animations.
+			// It is not just the withdrawing animation.
+			PlayWithdrawMontage(FName("Sheathe"));
+			CharacterState = ECharacterState::ECS_Unequipped;
+		}
+		if (CanWithdraw())
+		{
+			PlayWithdrawMontage(FName("Withdraw"));
+			CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+		}
 	}
 }
 
@@ -230,6 +248,16 @@ void AEchoCharacter::PlayAttackMontage()
 	}
 }
 
+void AEchoCharacter::PlayWithdrawMontage(FName SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && SwordWithdrawMontage)
+	{
+		AnimInstance->Montage_Play(SwordWithdrawMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, SwordWithdrawMontage);
+	}
+}
+
 void AEchoCharacter::AttackEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
@@ -239,4 +267,19 @@ bool AEchoCharacter::CanAttack()
 {
 	return ActionState == EActionState::EAS_Unoccupied &&
 		CharacterState != ECharacterState::ECS_Unequipped;
+}
+
+
+
+bool AEchoCharacter::CanSheathe()
+{
+	return ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState != ECharacterState::ECS_Unequipped;
+}
+
+bool AEchoCharacter::CanWithdraw()
+{
+	return ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState == ECharacterState::ECS_Unequipped &&
+		EquippedWeapon;
 }
