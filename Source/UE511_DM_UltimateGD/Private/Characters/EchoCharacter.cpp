@@ -130,7 +130,7 @@ void AEchoCharacter::Move(const FInputActionValue& Value)
 	// Find out which way is forward allowing for the camera to be moved around while moving
 	// Video is 'UE5 C++ Enhanced Input - 5 - Directional Input to Move a Character' at 20:00 mark on Youtube
 	// The if check is used to stop the character from moving when attacking
-	if (ActionState == EActionState::EAS_Attacking) return; 
+	if (ActionState != EActionState::EAS_Unoccupied) return; 
 	const FRotator Rotation = Controller->GetControlRotation();
 	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 
@@ -193,6 +193,7 @@ void AEchoCharacter::EKeyPressed()
 	{
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
 		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+		OverlappingItem = nullptr;
 		EquippedWeapon = OverlappingWeapon;
 	}
 	else
@@ -200,14 +201,16 @@ void AEchoCharacter::EKeyPressed()
 		if (CanSheathe())
 		{
 			// Be careful with namings since PlayWithdrawMontage has BOTH withdraw and sheath animations.
-			// It is not just the withdrawing animation.
+			// It is not just the withdrawing animation alone.
 			PlayWithdrawMontage(FName("Sheathe"));
 			CharacterState = ECharacterState::ECS_Unequipped;
+			ActionState = EActionState::EAS_EquippingWeapon;
 		}
-		if (CanWithdraw())
+		else if (CanWithdraw())
 		{
 			PlayWithdrawMontage(FName("Withdraw"));
 			CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+			ActionState = EActionState::EAS_EquippingWeapon;
 		}
 	}
 }
@@ -269,8 +272,6 @@ bool AEchoCharacter::CanAttack()
 		CharacterState != ECharacterState::ECS_Unequipped;
 }
 
-
-
 bool AEchoCharacter::CanSheathe()
 {
 	return ActionState == EActionState::EAS_Unoccupied &&
@@ -282,4 +283,25 @@ bool AEchoCharacter::CanWithdraw()
 	return ActionState == EActionState::EAS_Unoccupied &&
 		CharacterState == ECharacterState::ECS_Unequipped &&
 		EquippedWeapon;
+}
+
+void AEchoCharacter::Sheathe()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("thigh_twist_01_lSocket"));
+	}
+}
+
+void AEchoCharacter::Withdraw()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
+	}
+}
+
+void AEchoCharacter::FinishWithdrawing()
+{
+	ActionState = EActionState::EAS_Unoccupied;
 }

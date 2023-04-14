@@ -86,6 +86,15 @@ protected:
 	bool CanSheathe();
 	bool CanWithdraw();
 
+	UFUNCTION(BlueprintCallable)
+	void Sheathe();
+
+	UFUNCTION(BlueprintCallable)
+	void Withdraw();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishWithdrawing();
+
 private:
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
