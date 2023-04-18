@@ -25,6 +25,9 @@
 // Animation Montage includes
 #include "Animation/AnimMontage.h"
 
+// Components
+#include "Components/BoxComponent.h"
+
 
 // Sets default values
 AEchoCharacter::AEchoCharacter()
@@ -109,6 +112,14 @@ void AEchoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(FName("Equip"), IE_Pressed, this, &AEchoCharacter::EKeyPressed);
 	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &AEchoCharacter::Attack);
 
+}
+
+void AEchoCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)
+{
+	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
+	{
+		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+	}
 }
 
 void AEchoCharacter::Move(const FInputActionValue& Value)

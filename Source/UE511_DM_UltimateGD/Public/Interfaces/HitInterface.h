@@ -22,4 +22,5 @@ class UE511_DM_ULTIMATEGD_API IHitInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	virtual void GetHit() = 0;
 };
