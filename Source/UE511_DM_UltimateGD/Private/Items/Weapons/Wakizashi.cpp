@@ -13,6 +13,9 @@
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
 
+// Interfaces
+#include "Interfaces/HitInterface.h"
+
 AWakizashi::AWakizashi()
 {
 	// The CreateDefaultSubobject function as the name says creates a sub object in BP_Wakizashi
@@ -80,6 +83,11 @@ void AWakizashi::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(this);
+
+	for (AActor* Actor : IgnoreActors)
+	{
+		ActorsToIgnore.AddUnique(Actor);
+	}
 	
 	FHitResult BoxHit;
 
@@ -96,4 +104,13 @@ void AWakizashi::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		BoxHit,
 		true
 	);
+	if (BoxHit.GetActor())
+	{
+		IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
+		if (HitInterface)
+		{
+			HitInterface->GetHit(BoxHit.ImpactPoint);
+		}
+		IgnoreActors.AddUnique(BoxHit.GetActor());
+	}
 }

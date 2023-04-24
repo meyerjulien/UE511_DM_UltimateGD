@@ -4,10 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/HitInterface.h"
+
 #include "Enemy.generated.h"
 
+// Montages
+class UAnimMontage;
+
+
+
+
 UCLASS()
-class UE511_DM_ULTIMATEGD_API AEnemy : public ACharacter
+class UE511_DM_ULTIMATEGD_API AEnemy : public ACharacter, public IHitInterface
 {
 	GENERATED_BODY()
 
@@ -15,9 +23,20 @@ public:
 	// Sets default values for this character's properties
 	AEnemy();
 
+private:
+	// Animation Montages
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* HitReactMontage;
+
+	UPROPERTY(EditAnywhere, Category = Sounds)
+	USoundBase* HitSound;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// Play montage functions
+	void PlayHitReactMontage(const FName& SectionName);
 
 public:	
 	// Called every frame
@@ -26,4 +45,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void GetHit(const FVector& ImpactPoint) override;
+	void DirectionalHitReact(const FVector& ImpactPoint);
 };

@@ -26,7 +26,7 @@ class UGroomComponent;
 class AItem;
 class AWakizashi;
 
-// Attack
+// Montages
 class UAnimMontage;
 
 
@@ -86,7 +86,7 @@ protected:
 	void AttackEnd();
 	bool CanAttack();
 
-	void PlayWithdrawMontage(FName SectionName);
+	void PlayWithdrawMontage(const FName& SectionName);
 	bool CanSheathe();
 	bool CanWithdraw();
 

@@ -119,6 +119,7 @@ void AEchoCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type Collision
 	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
 	{
 		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+		EquippedWeapon->IgnoreActors.Empty();
 	}
 }
 
@@ -262,7 +263,7 @@ void AEchoCharacter::PlayAttackMontage()
 	}
 }
 
-void AEchoCharacter::PlayWithdrawMontage(FName SectionName)
+void AEchoCharacter::PlayWithdrawMontage(const FName& SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && SwordWithdrawMontage)
