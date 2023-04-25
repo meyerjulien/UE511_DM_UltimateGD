@@ -100,7 +100,8 @@ void AWakizashi::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		ETraceTypeQuery::TraceTypeQuery1,
 		false,
 		ActorsToIgnore,
-		EDrawDebugTrace::ForDuration,
+		// Was set to duration
+		EDrawDebugTrace::None,
 		BoxHit,
 		true
 	);
