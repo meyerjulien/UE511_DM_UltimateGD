@@ -16,6 +16,9 @@
 // Interfaces
 #include "Interfaces/HitInterface.h"
 
+// Niagara
+#include "NiagaraComponent.h"
+
 AWakizashi::AWakizashi()
 {
 	// The CreateDefaultSubobject function as the name says creates a sub object in BP_Wakizashi
@@ -57,6 +60,10 @@ void AWakizashi::Equip(USceneComponent* InParent, FName InSocketName)
 		{
 			Sphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		}
+	}
+	if (EmbersEffect)
+	{
+		EmbersEffect->Deactivate();
 	}
 }
 

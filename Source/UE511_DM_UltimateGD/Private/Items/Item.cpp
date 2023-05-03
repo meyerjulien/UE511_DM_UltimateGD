@@ -5,6 +5,7 @@
 #include "UE511_DM_UltimateGD/DebugMacros.h"
 #include "Components/SphereComponent.h"
 #include "Characters/EchoCharacter.h"
+#include "NiagaraComponent.h"
 
 #define THIRTY 30
 
@@ -21,6 +22,10 @@ AItem::AItem()
 	// Adding a Sphere Overlap
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	Sphere->SetupAttachment(GetRootComponent());
+
+	// Creating Niagara embers particles
+	EmbersEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Embers"));
+	EmbersEffect->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
