@@ -11,7 +11,14 @@
 // Montages
 class UAnimMontage;
 
+// Attributes
+class UAttributeComponent;
 
+// Widgets
+//class UWidgetComponent;
+
+// Health Bar
+class UHealthBarComponent;
 
 
 UCLASS()
@@ -24,6 +31,13 @@ public:
 	AEnemy();
 
 private:
+	// Attributes
+	UPROPERTY(VisibleAnywhere)
+	UAttributeComponent* Attributes;
+
+	UPROPERTY(VisibleAnywhere)
+	UHealthBarComponent* HealthBarWidget;
+
 	// Animation Montages
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* HitReactMontage;
