@@ -115,6 +115,17 @@ void AWakizashi::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	);
 	if (BoxHit.GetActor())
 	{
+		// Applies damage first
+		UGameplayStatics::ApplyDamage(
+			BoxHit.GetActor(),
+			Damage,
+			GetInstigator()->GetController(),
+			this,
+			UDamageType::StaticClass()
+		);
+
+		// Then checks hit interface to determine if enemy has health or not
+		// Used to determine which animation (HitReact or Death) to play
 		IHitInterface* HitInterface = Cast<IHitInterface>(BoxHit.GetActor());
 		if (HitInterface)
 		{
@@ -124,12 +135,6 @@ void AWakizashi::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 		CreateFields(BoxHit.ImpactPoint);
 
-		UGameplayStatics::ApplyDamage(
-			BoxHit.GetActor(),
-			Damage,
-			GetInstigator()->GetController(),
-			this,
-			UDamageType::StaticClass()
-		);
+
 	}
 }

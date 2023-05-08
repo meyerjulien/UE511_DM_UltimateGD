@@ -47,6 +47,44 @@ void AEnemy::BeginPlay()
 	
 }
 
+void AEnemy::Die()
+{
+	// TODO: Play Death Montage
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && DeathMontage)
+	{
+		AnimInstance->Montage_Play(DeathMontage);
+
+		// Coin flip between 0 and 1 randomly with the FMath RandRange function.
+		const int32 Selection = FMath::RandRange(0, 5);
+		FName SectionName = FName();
+
+		// Depending on the coin flip result case 0 or 1 will be fired.
+		switch (Selection)
+		{
+		case 0:
+			SectionName = FName("Death01");
+			break;
+		case 1:
+			SectionName = FName("Death02");
+			break;
+		case 2:
+			SectionName = FName("Death03");
+			break;
+		case 3:
+			SectionName = FName("Death04");
+			break;
+		case 4:
+			SectionName = FName("Death05");
+			break;
+		default:
+			break;
+		}
+
+		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
+	}
+}
+
 void AEnemy::PlayHitReactMontage(const FName& SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
@@ -76,7 +114,15 @@ void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 	// Debug
 	//DRAW_SPHERE_COLOR(ImpactPoint, FColor::Orange);
 
-	DirectionalHitReact(ImpactPoint);
+	if (Attributes && Attributes->IsAlive())
+	{
+		DirectionalHitReact(ImpactPoint);
+	}
+	else
+	{
+		Die();
+	}
+	
 
 	if (HitSound)
 	{

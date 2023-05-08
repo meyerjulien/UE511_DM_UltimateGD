@@ -42,6 +42,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* HitReactMontage;
 
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* DeathMontage;
+
+	// Hit Related
 	UPROPERTY(EditAnywhere, Category = Sounds)
 	USoundBase* HitSound;
 
@@ -53,7 +57,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	// Play montage functions
+	void Die();
 	void PlayHitReactMontage(const FName& SectionName);
+
+
 
 public:	
 	// Called every frame
