@@ -64,24 +64,29 @@ void AEnemy::Die()
 		{
 		case 0:
 			SectionName = FName("Death01");
+			DeathPose = EDeathPose::EDP_Death01;
 			break;
 		case 1:
 			SectionName = FName("Death02");
+			DeathPose = EDeathPose::EDP_Death02;
 			break;
 		case 2:
 			SectionName = FName("Death03");
+			DeathPose = EDeathPose::EDP_Death03;
 			break;
 		case 3:
 			SectionName = FName("Death04");
+			DeathPose = EDeathPose::EDP_Death04;
 			break;
 		case 4:
 			SectionName = FName("Death05");
+			DeathPose = EDeathPose::EDP_Death05;
 			break;
 		default:
 			break;
 		}
 
-		AnimInstance->Montage_JumpToSection(SectionName, HitReactMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, DeathMontage);
 	}
 }
 
