@@ -100,23 +100,27 @@ protected:
 	void FinishWithdrawing();
 
 private:
+	// Enums related
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"));
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 
+	// Camera related
 	UPROPERTY(VisibleAnywhere)
-		USpringArmComponent* SpringArm;
+	USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleAnywhere)
-		UCameraComponent* ViewCamera;
+	UCameraComponent* ViewCamera;
 
+	// Groom related
 	UPROPERTY(VisibleAnywhere, Category = Hair)
 	UGroomComponent* Hair;
 
 	UPROPERTY(VisibleAnywhere, Category = Hair)
 	UGroomComponent* Eyebrows;
 
+	// Overlapping
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
@@ -127,6 +131,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	UAnimMontage* SwordWithdrawMontage;
 
+	// Weapon related
 	UPROPERTY(VisibleAnywhere, Category = Weapon)
 	AWakizashi* EquippedWeapon;
 

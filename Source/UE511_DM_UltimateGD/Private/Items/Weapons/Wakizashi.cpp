@@ -90,6 +90,9 @@ void AWakizashi::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	const FVector Start = BoxTraceStart->GetComponentLocation();
 	const FVector End = BoxTraceEnd->GetComponentLocation();
 
+	// Create an array to store actors to ignore.
+	// Useful to ignore the actor performing the overlap,
+	// in this case, EchoCharacter or to have several hits at once on an enemy.
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(this);
 

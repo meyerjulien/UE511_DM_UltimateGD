@@ -203,7 +203,9 @@ void AEchoCharacter::EKeyPressed()
 	AWakizashi* OverlappingWeapon = Cast<AWakizashi>(OverlappingItem);
 	if (OverlappingWeapon)
 	{
-		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"), this, this);
+		OverlappingWeapon->Equip(GetMesh(), FName("Socket_Right_Hand"), this, this);
+		OverlappingWeapon->SetOwner(this);
+		OverlappingWeapon->SetInstigator(this);
 		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
 		OverlappingItem = nullptr;
 		EquippedWeapon = OverlappingWeapon;
@@ -301,7 +303,7 @@ void AEchoCharacter::Sheathe()
 {
 	if (EquippedWeapon)
 	{
-		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("thigh_twist_01_lSocket"));
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("Socket_Left_Hip"));
 	}
 }
 
@@ -309,7 +311,7 @@ void AEchoCharacter::Withdraw()
 {
 	if (EquippedWeapon)
 	{
-		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("Socket_Right_Hand"));
 	}
 }
 

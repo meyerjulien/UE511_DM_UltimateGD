@@ -1,0 +1,99 @@
+# Ignore all files except source files
+*
+!*/
+!Source/
+!*.h
+!*.cpp
+!*.hpp
+!*.inl
+
+# Ignore built game files
+Binaries/
+Build/
+
+# Ignore derived data cache
+DerivedDataCache/
+
+# Ignore log files
+*.log
+
+# Ignore saved cooked data
+Saved/Cooked*/
+
+# Ignore video and audio files
+*.avi
+*.mp3
+*.wav
+*.ogg
+*.uax
+*.umx
+*.mp4
+*.flac
+
+# Ignore texture and mesh source files
+*.psd
+*.fbx
+*.tga
+*.png
+*.jpg
+*.jpeg
+*.bmp
+*.tif
+*.tiff
+*.psd
+*.raw
+*.hdr
+*.exr
+
+# Ignore editor backups and autosaves
+*/Backup*/
+*/SavedAutosaves*/
+
+# Ignore additional intermediate directories
+*/Intermediate/AssetRegistry/
+*/Intermediate/Config/
+*/Intermediate/Build/
+*/Intermediate/WindowsNoEditor/
+
+# Ignore additional project-specific directories
+*/Config/*
+*/Plugins/*
+*/Content/Movies/*
+*/Content/FeaturePacks/*
+*/Content/Samples/*
+*/Content/Example/*
+
+# Ignore Unreal project file specific files
+*.sln
+*.suo
+*.xcodeproj/
+*.xcworkspace/
+*.ipch/
+*.opensdf
+*.sdf
+*.sln.docstates
+*.sdf
+*.suo
+*.sln.ide
+*.sln.ide-shm
+*.sln.ide-wal
+*.pbxproj
+
+# Ignore user-specific files
+*.user
+*.suo
+*.sln.docstates.user
+*.sdf.user
+
+# Ignore Visual Studio files
+.vs/
+*.VC.db
+*.VC.VC.opendb
+
+# Ignore macOS system files
+.DS_Store
+__MACOSX/
+*.DS_Store?
+*.Spotlight-V100
+*.Trashes
+*.Trash-*

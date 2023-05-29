@@ -1,0 +1,28 @@
+Binaries
+DerivedDataCache
+Intermediate
+Saved
+Build
+
+# Ignore everything in the "Content" folder except the following directories.
+# @TO-DO: Add folder path after creating a new one in UE if it must be kept.
+Content/
+!Content/Audio
+!Content/Blueprints
+!Content/Destructibles
+!Content/JapaneseAssets
+!Content/Maps
+!Content/Mixamo
+!Content/Textures
+
+ 
+.vscode
+.vs
+*.VC.db
+*.opensdf
+*.opendb
+*.sdf
+*.sln
+*.suo
+*.xcodeproj
+*.xcworkspace
