@@ -5,6 +5,9 @@
 #include "Characters/EchoCharacter.h"
 
 // Includes
+// Debugging
+#include "UE511_DM_UltimateGD/DebugMacros.h"
+
 // Kismet
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -118,6 +121,8 @@ void AWakizashi::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 	);
 	if (BoxHit.GetActor())
 	{
+
+
 		// Applies damage first
 		UGameplayStatics::ApplyDamage(
 			BoxHit.GetActor(),
@@ -137,7 +142,6 @@ void AWakizashi::OnBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		IgnoreActors.AddUnique(BoxHit.GetActor());
 
 		CreateFields(BoxHit.ImpactPoint);
-
 
 	}
 }
